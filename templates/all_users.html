@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}FitBuddy – Admin{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+    <p class="eyebrow">ADMIN</p>
+    <h1>User and Plan Dashboard</h1>
+</section>
+
+{% if not authorized %}
+<div class="card">
+    <h2>Admin access required</h2>
+    <p>For the demo, open this page with the configured password:</p>
+    <code>/view-all-users?admin_password=YOUR_PASSWORD</code>
+    <p>For a production application, replace this demo mechanism with proper authentication and authorization.</p>
+</div>
+{% else %}
+<div class="card table-wrap">
+    <h2>Users</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Weight</th>
+                <th>Goal</th>
+                <th>Intensity</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.user_id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.age }}</td>
+                <td>{{ user.weight }} kg</td>
+                <td>{{ user.goal }}</td>
+                <td>{{ user.intensity }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="6">No users yet.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card table-wrap">
+    <h2>Generated Plans</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Original Plan</th>
+                <th>Updated Plan</th>
+                <th>Feedback</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for plan in plans %}
+            <tr>
+                <td>{{ plan.user_id }}</td>
+                <td><pre>{{ plan.original_plan }}</pre></td>
+                <td><pre>{{ plan.updated_plan or "Not updated" }}</pre></td>
+                <td>{{ plan.feedback or "—" }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4">No plans yet.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

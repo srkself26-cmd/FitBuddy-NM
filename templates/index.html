@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}FitBuddy – Generate Plan{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div>
+        <p class="eyebrow">AI FITNESS PLANNER</p>
+        <h1>Create your personalized 7-day fitness plan.</h1>
+        <p>Enter your basic profile and goal. FitBuddy uses Gemini to generate a structured workout plan and a practical nutrition/recovery tip.</p>
+    </div>
+</section>
+
+{% if error %}
+<div class="alert error">{{ error }}</div>
+{% endif %}
+
+<section class="card">
+    <h2>Your fitness profile</h2>
+    <form method="post" action="/generate-workout" class="form-grid">
+        <label>
+            Name
+            <input name="username" required minlength="2" maxlength="100" placeholder="e.g. Alex">
+        </label>
+
+        <label>
+            User ID
+            <input name="user_id" required minlength="2" maxlength="50" placeholder="e.g. USER001">
+        </label>
+
+        <label>
+            Age
+            <input name="age" type="number" min="13" max="100" required>
+        </label>
+
+        <label>
+            Weight (kg)
+            <input name="weight" type="number" min="20" max="500" step="0.1" required>
+        </label>
+
+        <label>
+            Fitness goal
+            <select name="goal" required>
+                <option value="weight loss">Weight loss</option>
+                <option value="muscle gain">Muscle gain</option>
+                <option value="general wellness">General wellness</option>
+                <option value="flexibility">Flexibility</option>
+                <option value="endurance">Endurance</option>
+            </select>
+        </label>
+
+        <label>
+            Workout intensity
+            <select name="intensity" required>
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+            </select>
+        </label>
+
+        <button class="primary" type="submit">Generate 7-Day Plan</button>
+    </form>
+</section>
+
+<section class="info-grid">
+    <article class="card">
+        <h3>AI workout generation</h3>
+        <p>Gemini creates a day-by-day plan with warm-up, main workout, rest and recovery guidance.</p>
+    </article>
+    <article class="card">
+        <h3>Adaptive feedback</h3>
+        <p>Submit feedback after generation and FitBuddy can produce a revised plan.</p>
+    </article>
+    <article class="card">
+        <h3>Persistent storage</h3>
+        <p>SQLite stores user profiles and the original/updated plans for the admin dashboard.</p>
+    </article>
+</section>
+{% endblock %}
