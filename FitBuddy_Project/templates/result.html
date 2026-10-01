@@ -1,1 +1,185 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FitBuddy Result</title><link rel="stylesheet" href="/static/css/style.css"></head><body><main class="wide card">{% if message %}<div class="notice">{{ message }}</div>{% endif %}{% if error %}<div class="notice error">{{ error }}</div>{% endif %}{% if user %}<h1>{{ user.username }}'s FitBuddy Plan</h1><p>{{ user.goal }} · {{ user.intensity }} intensity · {{ user.age }} years · {{ user.weight }} kg</p>{% endif %}{% if workout_plan %}<section><h2>7-Day Workout Plan</h2><pre>{{ workout_plan }}</pre></section>{% endif %}{% if nutrition_tip %}<section><h2>Nutrition / Recovery Tip</h2><p>{{ nutrition_tip }}</p></section>{% endif %}{% if updated_plan %}<section><h2>Updated Plan</h2><pre>{{ updated_plan }}</pre></section>{% endif %}{% if user %}<section><h2>Refine With Feedback</h2><form action="/submit-feedback" method="post"><input type="hidden" name="user_id" value="{{ user.user_id }}"><textarea name="feedback" rows="4" placeholder="Example: Add more cardio or include more rest days" required></textarea><button>Update Plan</button></form></section>{% endif %}<p><a href="/">Create another plan</a> · <a href="/view-all-users">Admin View</a></p></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="FitBuddy – Your personalised AI fitness plan result.">
+  <title>FitBuddy – {% if user %}{{ user.username }}'s Plan{% else %}Result{% endif %}</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav class="navbar">
+  <a href="/" class="navbar-brand">
+    <div class="navbar-logo">FB</div>
+    <div>
+      <div class="navbar-name">FitBuddy</div>
+      <div class="navbar-tagline">AI Fitness Assistant</div>
+    </div>
+  </a>
+  <div class="navbar-spacer"></div>
+  <div class="navbar-links">
+    <a href="/" class="nav-link">Generate Plan</a>
+    <a href="/view-all-users" class="nav-link">Admin View</a>
+  </div>
+</nav>
+
+<!-- ── Page Content ── -->
+<div class="page-wrapper fade-in">
+
+  <!-- Status Alert -->
+  {% if message %}
+  <div class="alert alert-success">
+    <div class="alert-icon">✅</div>
+    <div>
+      <div class="alert-title">Success</div>
+      <div>{{ message }}</div>
+    </div>
+  </div>
+  {% endif %}
+  {% if error %}
+  <div class="alert alert-error">
+    <div class="alert-icon">⚠️</div>
+    <div>
+      <div class="alert-title">Error</div>
+      <div>{{ error }}</div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Page Header -->
+  {% if user %}
+  <div class="page-header">
+    <h1>{{ user.username }}'s Fitness Plan</h1>
+    <div class="result-meta">
+      <span class="meta-chip">🎯 {{ user.goal | title }}</span>
+      <span class="meta-chip">⚡ {{ user.intensity | title }} Intensity</span>
+      <span class="meta-chip">🗓️ {{ user.age }} years old</span>
+      <span class="meta-chip">⚖️ {{ user.weight }} kg</span>
+    </div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div style="display:grid; grid-template-columns: 1fr 340px; gap:20px; align-items:start;">
+
+    <!-- Left Column: Plans -->
+    <div>
+
+      <!-- Original Workout Plan -->
+      {% if workout_plan %}
+      <div class="section-block">
+        <div class="section-block-header">
+          <span class="section-block-icon">🏋️</span>
+          <span class="section-block-title">7-Day Workout Plan</span>
+        </div>
+        <div class="section-block-body">
+          <pre class="plan-content">{{ workout_plan }}</pre>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Updated / Refined Plan -->
+      {% if updated_plan %}
+      <div class="section-block">
+        <div class="section-block-header">
+          <span class="section-block-icon">🔄</span>
+          <span class="section-block-title">Updated Plan</span>
+          <span class="updated-badge">✦ Refined</span>
+        </div>
+        <div class="section-block-body">
+          <pre class="plan-content">{{ updated_plan }}</pre>
+        </div>
+      </div>
+      {% endif %}
+
+    </div><!-- /left -->
+
+    <!-- Right Column: Nutrition + Feedback -->
+    <div style="display:flex; flex-direction:column; gap:20px;">
+
+      <!-- Nutrition Tip -->
+      {% if nutrition_tip %}
+      <div class="section-block">
+        <div class="section-block-header">
+          <span class="section-block-icon">🥗</span>
+          <span class="section-block-title">Nutrition & Recovery Tip</span>
+        </div>
+        <div class="section-block-body">
+          <p class="nutrition-text">{{ nutrition_tip }}</p>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Feedback / Refinement -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon">💬</div>
+          <div>
+            <div class="card-header-title">Refine With Feedback</div>
+            <div class="card-header-subtitle">Tell us what to change</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <form action="/submit-feedback" method="post" id="feedbackForm" onsubmit="handleFeedback(event)">
+            <input type="hidden" name="user_id" value="{{ user.user_id }}">
+            <div class="form-group">
+              <label class="form-label" for="feedback">Your Feedback</label>
+              <textarea
+                id="feedback"
+                class="form-control"
+                name="feedback"
+                rows="5"
+                placeholder="Example: Add more cardio, include rest days, make it less intense…"
+                required></textarea>
+            </div>
+            <div style="margin-top:16px;">
+              <button id="feedbackBtn" type="submit" class="btn btn-success btn-full">
+                <span>🔄</span>
+                <span id="feedbackLabel">Update My Plan</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div><!-- /right -->
+  </div><!-- /grid -->
+
+  {% endif %}
+
+  <!-- Action Bar -->
+  <div class="action-bar">
+    <div class="action-bar-left">
+      <a href="/" class="btn btn-secondary">← Generate New Plan</a>
+    </div>
+    <div class="action-bar-right">
+      <a href="/view-all-users" class="btn btn-secondary">👥 Admin View</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Footer ── -->
+<footer class="page-footer">
+  FitBuddy &nbsp;·&nbsp; AI Fitness Plan Generator using Google Gemini &nbsp;·&nbsp; 2026
+</footer>
+
+<script>
+function handleFeedback(e) {
+  const btn = document.getElementById('feedbackBtn');
+  const label = document.getElementById('feedbackLabel');
+  btn.classList.add('btn-loading');
+  label.textContent = 'Updating your plan…';
+}
+</script>
+
+<style>
+@media (max-width: 900px) {
+  .page-wrapper > div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+</style>
+</body>
+</html>

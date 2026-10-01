@@ -1,1 +1,158 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FitBuddy</title><link rel="stylesheet" href="/static/css/style.css"></head><body><main class="card"><h1>FitBuddy</h1><p>AI Fitness Plan Generator using Gemini Models</p><form action="/generate-workout" method="post"><label>Name<input name="username" required></label><label>User ID<input name="user_id" required></label><label>Age<input type="number" name="age" min="1" required></label><label>Weight (kg)<input type="number" name="weight" step="0.1" min="1" required></label><label>Fitness Goal<select name="goal"><option>weight loss</option><option>muscle gain</option><option>flexibility</option><option>general wellness</option></select></label><label>Workout Intensity<select name="intensity"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></label><button>Generate Plan</button></form></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="FitBuddy – AI-powered personalised fitness plan generator using Google Gemini models.">
+  <title>FitBuddy – AI Fitness Plan Generator</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav class="navbar">
+  <a href="/" class="navbar-brand">
+    <div class="navbar-logo">FB</div>
+    <div>
+      <div class="navbar-name">FitBuddy</div>
+      <div class="navbar-tagline">AI Fitness Assistant</div>
+    </div>
+  </a>
+  <div class="navbar-spacer"></div>
+  <div class="navbar-links">
+    <a href="/" class="nav-link active">Generate Plan</a>
+    <a href="/view-all-users" class="nav-link">Admin View</a>
+  </div>
+</nav>
+
+<!-- ── Page Content ── -->
+<div class="page-wrapper narrow fade-in">
+
+  <!-- Hero Banner -->
+  <div class="hero-banner">
+    <div class="hero-badge">✦ Powered by Google Gemini</div>
+    <h1>Your Personal AI Fitness Coach</h1>
+    <p>Get a customised 7-day workout plan and nutrition advice tailored to your body and goals — in seconds.</p>
+  </div>
+
+  <!-- Form Card -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-icon">📋</div>
+      <div>
+        <div class="card-header-title">Create Your Fitness Profile</div>
+        <div class="card-header-subtitle">Fill in your details to generate a personalised plan</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <form action="/generate-workout" method="post" id="fitForm" onsubmit="handleSubmit(event)">
+        <div class="form-grid">
+
+          <!-- Name -->
+          <div class="form-group">
+            <label class="form-label" for="username">Full Name <span class="required">*</span></label>
+            <input
+              id="username"
+              class="form-control"
+              name="username"
+              type="text"
+              placeholder="e.g. Rishikanth S"
+              required
+              autocomplete="name">
+          </div>
+
+          <!-- User ID -->
+          <div class="form-group">
+            <label class="form-label" for="user_id">User ID <span class="required">*</span></label>
+            <input
+              id="user_id"
+              class="form-control"
+              name="user_id"
+              type="text"
+              placeholder="e.g. user_001"
+              required>
+          </div>
+
+          <!-- Age -->
+          <div class="form-group">
+            <label class="form-label" for="age">Age (years) <span class="required">*</span></label>
+            <input
+              id="age"
+              class="form-control"
+              name="age"
+              type="number"
+              min="10"
+              max="100"
+              placeholder="e.g. 22"
+              required>
+          </div>
+
+          <!-- Weight -->
+          <div class="form-group">
+            <label class="form-label" for="weight">Weight (kg) <span class="required">*</span></label>
+            <input
+              id="weight"
+              class="form-control"
+              name="weight"
+              type="number"
+              step="0.1"
+              min="20"
+              max="300"
+              placeholder="e.g. 70.5"
+              required>
+          </div>
+
+          <!-- Fitness Goal -->
+          <div class="form-group full">
+            <label class="form-label" for="goal">Fitness Goal <span class="required">*</span></label>
+            <select id="goal" class="form-control" name="goal" required>
+              <option value="" disabled selected>Select your primary goal…</option>
+              <option value="weight loss">⚖️ Weight Loss</option>
+              <option value="muscle gain">💪 Muscle Gain</option>
+              <option value="flexibility">🧘 Flexibility & Mobility</option>
+              <option value="general wellness">🌿 General Wellness</option>
+            </select>
+          </div>
+
+          <!-- Workout Intensity -->
+          <div class="form-group full">
+            <label class="form-label">Workout Intensity <span class="required">*</span></label>
+            <div class="segment-group">
+              <input type="radio" id="int-low"    name="intensity" value="low">
+              <label for="int-low">🟢 Low</label>
+              <input type="radio" id="int-medium" name="intensity" value="medium" checked>
+              <label for="int-medium">🟡 Medium</label>
+              <input type="radio" id="int-high"   name="intensity" value="high">
+              <label for="int-high">🔴 High</label>
+            </div>
+          </div>
+
+        </div><!-- /form-grid -->
+
+        <div style="margin-top:28px;">
+          <button id="submitBtn" class="btn btn-primary btn-lg btn-full" type="submit">
+            <span>✨</span>
+            <span id="btnLabel">Generate My Fitness Plan</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div><!-- /card -->
+
+</div>
+
+<!-- ── Footer ── -->
+<footer class="page-footer">
+  FitBuddy &nbsp;·&nbsp; AI Fitness Plan Generator using Google Gemini &nbsp;·&nbsp; 2026
+</footer>
+
+<script>
+function handleSubmit(e) {
+  const btn = document.getElementById('submitBtn');
+  const label = document.getElementById('btnLabel');
+  btn.classList.add('btn-loading');
+  label.textContent = 'Generating your plan…';
+}
+</script>
+</body>
+</html>

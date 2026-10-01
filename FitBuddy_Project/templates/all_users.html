@@ -1,1 +1,144 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FitBuddy Admin</title><link rel="stylesheet" href="/static/css/style.css"></head><body><main class="wide card"><h1>FitBuddy - View All Users</h1><table><thead><tr><th>User</th><th>Age</th><th>Weight</th><th>Goal</th><th>Intensity</th><th>Plan Status</th></tr></thead><tbody>{% for user in users %}{% set p=plans.get(user.user_id) %}<tr><td>{{ user.username }}<br>{{ user.user_id }}</td><td>{{ user.age }}</td><td>{{ user.weight }}</td><td>{{ user.goal }}</td><td>{{ user.intensity }}</td><td>{% if p %}Original plan stored{% if p.updated_plan %}<br>Updated plan stored{% endif %}{% else %}No plan{% endif %}</td></tr>{% endfor %}</tbody></table><p><a href="/">Back to Home</a></p></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="FitBuddy Admin – View all registered users and their fitness plans.">
+  <title>FitBuddy – Admin Dashboard</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav class="navbar">
+  <a href="/" class="navbar-brand">
+    <div class="navbar-logo">FB</div>
+    <div>
+      <div class="navbar-name">FitBuddy</div>
+      <div class="navbar-tagline">AI Fitness Assistant</div>
+    </div>
+  </a>
+  <div class="navbar-spacer"></div>
+  <div class="navbar-links">
+    <a href="/" class="nav-link">Generate Plan</a>
+    <a href="/view-all-users" class="nav-link active">Admin View</a>
+  </div>
+</nav>
+
+<!-- ── Page Content ── -->
+<div class="page-wrapper fade-in">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1>Admin Dashboard</h1>
+    <p>All registered users and their AI-generated fitness plans</p>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon blue">👥</div>
+      <div>
+        <div class="stat-value">{{ users | length }}</div>
+        <div class="stat-label">Total Users</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">✅</div>
+      <div>
+        <div class="stat-value">{{ plans | length }}</div>
+        <div class="stat-label">Plans Generated</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon orange">🔄</div>
+      <div>
+        <div class="stat-value">{{ plans.values() | selectattr('updated_plan') | list | length }}</div>
+        <div class="stat-label">Plans Updated</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Users Table Card -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-icon">📊</div>
+      <div>
+        <div class="card-header-title">User Records</div>
+        <div class="card-header-subtitle">All users registered in the system</div>
+      </div>
+    </div>
+    <div class="card-body" style="padding: 0;">
+      {% if users %}
+      <div class="data-table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>User</th>
+              <th>Age</th>
+              <th>Weight</th>
+              <th>Goal</th>
+              <th>Intensity</th>
+              <th>Plan Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for user in users %}
+            {% set p = plans.get(user.user_id) %}
+            <tr>
+              <td style="color:var(--text-muted); font-size:12px;">{{ loop.index }}</td>
+              <td>
+                <div class="user-cell-name">{{ user.username }}</div>
+                <div class="user-cell-id">{{ user.user_id }}</div>
+              </td>
+              <td>{{ user.age }} yrs</td>
+              <td>{{ user.weight }} kg</td>
+              <td>{{ user.goal | title }}</td>
+              <td>
+                {% if user.intensity == 'low' %}🟢
+                {% elif user.intensity == 'medium' %}🟡
+                {% else %}🔴{% endif %}
+                {{ user.intensity | title }}
+              </td>
+              <td>
+                {% if p %}
+                  {% if p.updated_plan %}
+                  <span class="status-badge updated">🔄 Updated</span>
+                  {% else %}
+                  <span class="status-badge active">✅ Active</span>
+                  {% endif %}
+                {% else %}
+                  <span class="status-badge none">— No Plan</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <div class="empty-state-icon">📭</div>
+        <p>No users have generated plans yet. <a href="/" style="color:var(--primary)">Generate the first plan →</a></p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Action Bar -->
+  <div class="action-bar">
+    <div class="action-bar-left">
+      <a href="/" class="btn btn-primary">✨ Generate New Plan</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Footer ── -->
+<footer class="page-footer">
+  FitBuddy &nbsp;·&nbsp; AI Fitness Plan Generator using Google Gemini &nbsp;·&nbsp; 2026
+</footer>
+
+</body>
+</html>
