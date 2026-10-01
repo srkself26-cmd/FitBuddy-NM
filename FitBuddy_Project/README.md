@@ -2,10 +2,11 @@
 
 ## Submission Team
 
-**Team ID (normalized):** `6ab7f6f8c23107aaaa72871e`  
-**Team ID as provided:** `6ab7f6f8c23 107aaaa728 71e`
+**Team ID:** `6ab7f6f8c23107aaaa72871e`
 
-| No. | Team Member | Email | Role |
+**Project:** FitBuddy - AI Fitness Plan Generator using Gemini Models
+
+| No. | Member | Email | Role |
 |---:|---|---|---|
 | 41 | Jeyadev V J | 9993120258@gcesalem.edu.in | Team Leader |
 | 42 | Thangadurai | 9993135880@gcesalem.edu.in | Member |
@@ -15,15 +16,15 @@
 
 ## Assumed Working Responsibilities
 
-- **Jeyadev V J:** team coordination, requirements, FastAPI routes and system integration.
+- **Jeyadev V J:** team coordination, requirements, FastAPI routes and integration.
 - **Thangadurai:** frontend/UI, HTML, CSS and Jinja2 templates.
-- **Rishikanth S:** Gemini AI integration, prompting, workout generation and feedback-based updates.
+- **Rishikanth S:** Gemini AI integration, prompting, workout generation and plan updates.
 - **Indiravarma Elango:** SQLite/SQLAlchemy persistence and admin view.
 - **Sanjay Kumar:** testing, deployment support, documentation and submission readiness.
 
-## Required Phase Dates
+## Phase Dates
 
-| Phase Folder | Date |
+| Phase | Date |
 |---|---|
 | 1. Brainstorming & Ideation | 01 October 2026 |
 | 2. Requirement Analysis | 01 October 2026 |
@@ -34,14 +35,18 @@
 | 7.Project Documentation | 02 October 2026 |
 | 8.Project Demonstration | 03 October 2026 |
 
-## Formatting and Quality Updates
+## Local Run
 
-- Body text in the submission forms is set to 12 pt with larger professional headings.
-- Tables are redesigned for readability with consistent spacing and alignment.
-- The Empathy Map uses a four-colour quadrant layout for Says, Thinks, Does and Feels.
-- Phase dates and team ID are updated consistently across the submission forms.
-- The Project Documentation DOCX has been reformatted to use 12 pt body text and a professional cover page.
+```bash
+python -m venv fitbuddy-env
+fitbuddy-env\Scripts\activate
+pip install -r requirements.txt
+# Create .env and set GOOGLE_API_KEY
+uvicorn app.main:app --reload
+```
+
+Open `http://127.0.0.1:8000` and use `/docs` for FastAPI API testing.
 
 ## Security Note
 
-The Gemini API key is not embedded in the submission. Use the included `.env.example` and set `GOOGLE_API_KEY` locally before running the application.
+The Gemini API key must be supplied through an environment variable. Do not commit a real secret to GitHub.

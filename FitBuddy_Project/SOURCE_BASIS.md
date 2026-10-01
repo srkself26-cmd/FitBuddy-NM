@@ -1,0 +1,1 @@
+This source package is a reconstructed implementation based on the attached FitBuddy Project Documentation. It follows the documented FastAPI, Jinja2, Gemini 1.5 Pro / Gemini Flash, SQLAlchemy + SQLite, route and local-deployment structure. It is not claimed to be an exact byte-for-byte copy of a prior private repository.
