@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import type { UserProfile, Intensity } from '../lib/supabase'
-import { generateWorkoutPlan, saveUserToDb, savePlanToDb } from '../lib/api'
+import { generateWorkoutPlan, saveUserToDb, savePlanToDb, testGeminiConnection } from '../lib/api'
 
 interface HomeProps {
   onPlanGenerated: (profile: UserProfile, workoutPlan: string, nutritionTip: string, message: string) => void
@@ -22,6 +22,8 @@ const INTENSITIES: { value: Intensity; label: string; icon: string }[] = [
 export function Home({ onPlanGenerated }: HomeProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [testState, setTestState] = useState<'idle' | 'testing' | 'success' | 'failed'>('idle')
+  const [testMessage, setTestMessage] = useState<string | null>(null)
   const [form, setForm] = useState<UserProfile>({
     username: '',
     user_id: '',
@@ -33,6 +35,19 @@ export function Home({ onPlanGenerated }: HomeProps) {
 
   const handleChange = (field: keyof UserProfile, value: string | number) => {
     setForm(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleTestConnection = async () => {
+    setTestState('testing')
+    setTestMessage(null)
+    const { ok, message } = await testGeminiConnection()
+    if (ok) {
+      setTestState('success')
+      setTestMessage('Gemini API key is connected and working correctly.')
+    } else {
+      setTestState('failed')
+      setTestMessage(message)
+    }
   }
 
   const handleSubmit = async (e: FormEvent) => {
@@ -58,6 +73,22 @@ export function Home({ onPlanGenerated }: HomeProps) {
         <div className="hero-badge">✦ Powered by Google Gemini</div>
         <h1>Your Personal AI Fitness Coach</h1>
         <p>Get a customised 7-day workout plan and nutrition advice tailored to your body and goals — in seconds.</p>
+        <div className="hero-test-connection">
+          <button
+            className={`btn btn-test ${testState === 'testing' ? 'btn-loading' : ''} ${testState === 'success' ? 'btn-test-success' : ''} ${testState === 'failed' ? 'btn-test-failed' : ''}`}
+            type="button"
+            onClick={handleTestConnection}
+            disabled={testState === 'testing'}
+          >
+            <span>{testState === 'testing' ? 'Testing…' : testState === 'success' ? '✓ Connected' : testState === 'failed' ? '✕ Failed' : 'Test Gemini Connection'}</span>
+          </button>
+          {testState === 'success' && testMessage && (
+            <div className="test-status test-status-success">{testMessage}</div>
+          )}
+          {testState === 'failed' && testMessage && (
+            <div className="test-status test-status-error">{testMessage}</div>
+          )}
+        </div>
       </div>
 
       <div className="card">

@@ -27,6 +27,15 @@ async function callGemini(action: string, payload: Record<string, unknown>): Pro
   return data.result
 }
 
+export async function testGeminiConnection(): Promise<{ ok: boolean; message: string }> {
+  try {
+    const result = await callGemini('test', {})
+    return { ok: true, message: result }
+  } catch (err) {
+    return { ok: false, message: err instanceof Error ? err.message : 'Connection failed' }
+  }
+}
+
 export async function generateWorkoutPlan(profile: UserProfile): Promise<{ workoutPlan: string; nutritionTip: string }> {
   const [workoutPlan, nutritionTip] = await Promise.all([
     callGemini('generate', {

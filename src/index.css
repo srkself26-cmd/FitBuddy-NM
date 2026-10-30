@@ -220,6 +220,79 @@ body {
   line-height: 1.6;
 }
 
+/* ── Hero Test Connection Button ── */
+.hero-test-connection {
+  margin-top: 22px;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-test {
+  height: 38px;
+  padding: 0 18px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.15);
+  border: 1.5px solid rgba(255,255,255,.3);
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-test:hover {
+  background: rgba(255,255,255,.25);
+  border-color: rgba(255,255,255,.5);
+}
+
+.btn-test:disabled {
+  opacity: .7;
+  cursor: not-allowed;
+}
+
+.btn-test.btn-loading::after {
+  right: 14px;
+  border-color: rgba(255,255,255,.4);
+  border-top-color: #fff;
+}
+
+.btn-test-success {
+  background: rgba(46,125,50,.5) !important;
+  border-color: rgba(165,214,167,.6) !important;
+  pointer-events: none;
+}
+
+.btn-test-failed {
+  background: rgba(198,40,40,.5) !important;
+  border-color: rgba(255,171,145,.6) !important;
+}
+
+.test-status {
+  margin-top: 10px;
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  max-width: 460px;
+}
+
+.test-status-success {
+  background: rgba(46,125,50,.2);
+  color: #e8f5e9;
+  border: 1px solid rgba(165,214,167,.4);
+}
+
+.test-status-error {
+  background: rgba(255,235,238,.15);
+  color: #ffebee;
+  border: 1px solid rgba(255,171,145,.4);
+  word-break: break-word;
+}
+
 /* ── Cards ── */
 .card {
   background: var(--surface);
