@@ -73,7 +73,7 @@ Goal: ${goal}
 Workout intensity: ${intensity}
 
 For each day, include a 5-10 minute warm-up, a main workout with exercise names and sets/reps or duration plus rest guidance, and a cooldown or recovery tip. Keep the format day-wise and easy to follow.`;
-      result = await callGemini(prompt, "gemini-2.5-pro");
+      result = await callGemini(prompt, "gemini-1.5-pro");
     } else if (action === "nutrition") {
       const { goal } = body;
       if (!goal) {
@@ -83,7 +83,7 @@ For each day, include a 5-10 minute warm-up, a main workout with exercise names 
         );
       }
       const prompt = `Give one concise, practical nutrition or recovery tip aligned with a fitness goal of ${goal}.`;
-      result = await callGemini(prompt, "gemini-2.5-flash");
+      result = await callGemini(prompt, "gemini-1.5-flash");
     } else if (action === "update") {
       const { originalPlan, feedback } = body;
       if (!originalPlan || !feedback) {
@@ -101,10 +101,10 @@ ${originalPlan}
 
 USER FEEDBACK:
 ${feedback}`;
-      result = await callGemini(prompt, "gemini-2.5-pro");
+      result = await callGemini(prompt, "gemini-1.5-pro");
     } else if (action === "test") {
       const testPrompt = "Reply with the single word: connected";
-      const text = await callGemini(testPrompt, "gemini-2.5-flash");
+      const text = await callGemini(testPrompt, "gemini-1.5-flash");
       return new Response(
         JSON.stringify({ result: text, status: "ok" }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } },
